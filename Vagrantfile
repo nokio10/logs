@@ -24,7 +24,7 @@ config.vm.hostname = opts[:name]
 config.vm.network "private_network", ip: opts[:ip]
 if opts[:name] == boxes.last[:name]
 config.vm.provision "ansible" do |ansible|
-ansible.playbook = "main.yaml"
+ansible.playbook = "ansible/main.yaml"
 ansible.become = "true"
 ansible.host_key_checking = "false"
 ansible.limit = "all"

@@ -17,6 +17,8 @@
 
 - hosts: web
   become: true
+  vars:
+    server_address: 192.168.56.15 
   tasks:
   - name: install epel
     yum:
@@ -45,8 +47,8 @@
 
       
   - name: load nginx.conf
-    copy:
-      src: "files/nginx.conf"
+    template:
+      src: "files/nginx.conf.j2"
       dest: /etc/nginx/nginx.conf
       owner: root
       group: root
@@ -79,8 +81,8 @@
 
 
   - name: load audisp-remote.conf
-    copy:
-      src: "files/audisp-remote.conf"
+    template:
+      src: "files/audisp-remote.conf.j2"
       dest: /etc/audisp/audisp-remote.conf
       owner: root
       group: root
@@ -88,7 +90,7 @@
 
 
   - name: Restart auditd
-    command: service auditd restart
+    shell: service auditd restart
 
 
 - hosts: log
@@ -108,3 +110,16 @@
       name: rsyslog
       enabled: yes
       state: restarted
+
+
+  - name: Config auditd
+    lineinfile:
+      dest: /etc/audit/auditd.conf
+      regexp: '##tcp_listen_port = 60'
+      line: 'tcp_listen_port = 60'
+      state: present
+
+
+  - name: Restart auditd
+    shell: service auditd restart
+ 
