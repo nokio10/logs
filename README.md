@@ -20,6 +20,7 @@ elk.
 Решение первого задания представлено в виде ansible playbook - main.yaml.
 
 После развертывания машин и выполения плейбука логи поступают на сервер. 
+Для проверки перехожу по несуществующему пути 192.168.56.10/pp в браузере и меняю права на файл nginx.conf chmod +x /etc/nginx/nginx.conf
 
 ```
 [root@log ~]# cat /var/log/rsyslog/web/nginx_access.log
