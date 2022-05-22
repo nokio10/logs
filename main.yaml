@@ -1,0 +1,114 @@
+- hosts: all
+  become: true
+  tasks:
+  - name: Copy timezone
+    copy:
+      src: "/usr/share/zoneinfo/Europe/Moscow"
+      dest: /etc/localtime
+      remote_src: yes
+
+
+  - name: restart chronyd
+    systemd:
+      name: chronyd
+      enabled: yes
+      state: restarted
+
+
+- hosts: web
+  become: true
+  tasks:
+  - name: install epel
+    yum:
+      name: epel-release
+      state: present
+
+
+  - name: Install nginx
+    yum:
+      name: nginx
+      state: present
+
+
+  - name: Install audispd-plugins
+    yum:
+      name: audispd-plugins
+      state: present
+
+
+  - name: Add audit.rules
+    lineinfile:
+      dest: /etc/audit/rules.d/audit.rules
+      state: absent
+      line: |
+        -w /etc/nginx/nginx.conf -p wa -k nginx_conf
+        -w /etc/nginx/default.d/ -p wa -k nginx_conf
+
+      
+  - name: load nginx.conf
+    copy:
+      src: "files/nginx.conf"
+      dest: /etc/nginx/nginx.conf
+      owner: root
+      group: root
+      mode: '0644'
+
+
+  - name: restart nginx
+    systemd:
+      name: nginx
+      enabled: yes
+      state: restarted
+
+
+  - name: load auditd.conf
+    copy:
+      src: "files/auditd.conf"
+      dest: /etc/audit/auditd.conf
+      owner: root
+      group: root
+      mode: '0644'
+
+
+  - name: load nginx.conf
+    copy:
+      src: "files/au-remote.conf"
+      dest: /etc/audisp/plugins.d/au-remote.conf
+      owner: root
+      group: root
+      mode: '0644'
+
+
+  - name: load nginx.conf
+    copy:
+      src: "files/audisp-remote.conf"
+      dest: /etc/audisp/audisp-remote.conf
+      owner: root
+      group: root
+      mode: '0644'
+
+
+  - name: Restart auditd
+    systemd:
+      name: auditd
+      enabled: yes
+      state: restarted
+
+
+- hosts: log
+  become: true
+  tasks:
+  - name: load nginx.conf
+    copy:
+      src: "files/rsyslog.conf"
+      dest: /etc/rsyslog.conf
+      owner: root
+      group: root
+      mode: '0644'
+
+
+  - name: Restart rsyslog
+    systemd:
+      name: rsyslog
+      enabled: yes
+      state: restarted
