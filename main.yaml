@@ -38,8 +38,7 @@
 
   - name: Add audit.rules
     lineinfile:
-      dest: /etc/audit/rules.d/audit.rules
-      state: absent
+      path: /etc/audit/rules.d/audit.rules
       line: |
         -w /etc/nginx/nginx.conf -p wa -k nginx_conf
         -w /etc/nginx/default.d/ -p wa -k nginx_conf
@@ -70,7 +69,7 @@
       mode: '0644'
 
 
-  - name: load nginx.conf
+  - name: load au-remote.conf
     copy:
       src: "files/au-remote.conf"
       dest: /etc/audisp/plugins.d/au-remote.conf
@@ -79,7 +78,7 @@
       mode: '0644'
 
 
-  - name: load nginx.conf
+  - name: load audisp-remote.conf
     copy:
       src: "files/audisp-remote.conf"
       dest: /etc/audisp/audisp-remote.conf
@@ -89,16 +88,13 @@
 
 
   - name: Restart auditd
-    systemd:
-      name: auditd
-      enabled: yes
-      state: restarted
+    command: service auditd restart
 
 
 - hosts: log
   become: true
   tasks:
-  - name: load nginx.conf
+  - name: load rsyslog.conf
     copy:
       src: "files/rsyslog.conf"
       dest: /etc/rsyslog.conf
