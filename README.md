@@ -55,4 +55,11 @@ node=web type=PATH msg=audit(1653239655.488:1701): item=0 name="/etc/nginx/nginx
 node=web type=PROCTITLE msg=audit(1653239655.488:1701): proctitle=63686D6F64002B78002F6574632F6E67696E782F6E67696E782E636F6E66
 ```
 
+Также в плейбук включен этап развертывания еще одном vm с elk. После установки остается только зайти в кибану (пробрасывается порт 5601 на локальную машину) и добавить патерн с логами nginx.
+
+![image](https://user-images.githubusercontent.com/98832702/170556802-dbb3adba-9352-4631-93c6-0ad9afa7adc3.png)
+
+![image](https://user-images.githubusercontent.com/98832702/170556868-b659d4d6-9e51-44f9-b1c9-7dfb2f77baa6.png)
+
+
 
