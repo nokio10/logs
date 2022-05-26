@@ -1,9 +1,6 @@
 Vagrant.configure("2") do |config|
-# Base VM OS configuration.
-config.vm.box = "centos7"
-#config.vm.provider :hyperv do |v|
-#config.vm.box = "centos/7"
-#config.vm.box_version = "2004.01"
+config.vm.box = "centos/7"
+config.vm.box_version = "2004.01"
 config.vm.provider :virtualbox do |v|
 v.memory = 2048
 v.cpus = 2
