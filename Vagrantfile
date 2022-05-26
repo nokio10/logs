@@ -15,6 +15,9 @@ boxes = [
 },
 { :name => "log",
 :ip => "192.168.56.15",
+},
+{ :name => "elk",
+:ip => "192.168.56.25",
 }
 ]
 # Provision each of the VMs.
@@ -22,6 +25,9 @@ boxes.each do |opts|
 config.vm.define opts[:name] do |config|
 config.vm.hostname = opts[:name]
 config.vm.network "private_network", ip: opts[:ip]
+if opts[:name] == "elk"
+config.vm.network "forwarded_port", guest: 5601, host: 5601
+end
 if opts[:name] == boxes.last[:name]
 config.vm.provision "ansible" do |ansible|
 ansible.playbook = "ansible/main.yaml"
